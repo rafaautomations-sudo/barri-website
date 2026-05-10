@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Barri — Never Miss Another Lead</title>
+  <meta name="description" content="Barri answers every missed call for law firms and real estate agents — instantly calling back, qualifying leads, and booking appointments automatically."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    :root {
+      --black: #0a0a0a;
+      --deep: #111111;
+      --card: #161616;
+      --border: rgba(255,255,255,0.07);
+      --gold: #c9a96e;
+      --gold-light: #e8c99a;
+      --white: #f5f0e8;
+      --muted: rgba(245,240,232,0.45);
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+ 
+    html { scroll-behavior: smooth; }
+ 
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+ 
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.6;
+    }
+ 
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 60px;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.4s, background 0.4s, backdrop-filter 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(16px);
+      border-color: var(--border);
+    }
+    .logo {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .logo span { color: var(--gold); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      background: var(--gold);
+      color: var(--black) !important;
+      padding: 10px 24px;
+      font-weight: 500 !important;
+      letter-spacing: 0.06em !important;
+      transition: background 0.2s, color 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--gold-light) !important; color: var(--black) !important; }
+ 
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 140px 40px 100px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(ellipse, rgba(201,169,110,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent);
+      pointer-events: none;
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(201,169,110,0.3);
+      background: rgba(201,169,110,0.06);
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      margin-bottom: 40px;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(52px, 8vw, 110px);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.01em;
+      margin-bottom: 32px;
+      animation: fadeUp 0.9s 0.1s ease both;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 52px;
+      font-weight: 300;
+      animation: fadeUp 1s 0.2s ease both;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 1s 0.3s ease both;
+    }
+    .btn-primary {
+      background: var(--gold);
+      color: var(--black);
+      padding: 16px 40px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      padding: 16px 40px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+      display: inline-block;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.25); transform: translateY(-1px); }
+ 
+    .hero-stats {
+      display: flex;
+      gap: 60px;
+      justify-content: center;
+      margin-top: 80px;
+      padding-top: 60px;
+      border-top: 1px solid var(--border);
+      animation: fadeUp 1s 0.4s ease both;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 500;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+ 
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+ 
+    /* ── SECTIONS COMMON ── */
+    section { padding: 120px 40px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 68px);
+      font-weight: 300;
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+    h2 em { font-style: italic; color: var(--gold); }
+    .section-intro {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 520px;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+ 
+    /* ── PROBLEM ── */
+    .problem { background: var(--deep); }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 70px;
+    }
+    .problem-card {
+      background: var(--card);
+      padding: 48px 44px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .problem-card:hover { border-color: rgba(201,169,110,0.2); }
+    .problem-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--gold);
+      transition: height 0.4s ease;
+    }
+    .problem-card:hover::before { height: 100%; }
+    .problem-num {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 600;
+      color: rgba(201,169,110,0.12);
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .problem-card h3 {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 500;
+      margin-bottom: 14px;
+    }
+    .problem-card p { color: var(--muted); font-size: 15px; line-height: 1.7; }
+ 
+    /* ── HOW IT WORKS ── */
+    .how { position: relative; }
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 70px;
+      border: 1px solid var(--border);
+    }
+    .step {
+      padding: 52px 40px;
+      background: var(--black);
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+    .step:last-child { border-right: none; }
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 14px;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      margin-bottom: 28px;
+    }
+    .step-icon {
+      width: 48px; height: 48px;
+      border: 1px solid rgba(201,169,110,0.25);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 28px;
+      font-size: 20px;
+    }
+    .step h3 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 14px;
+    }
+    .step p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+ 
+    /* ── NICHES ── */
+    .niches { background: var(--deep); }
+    .niche-tabs {
+      display: flex;
+      gap: 2px;
+      margin: 50px 0 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .niche-tab {
+      padding: 16px 32px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: color 0.2s;
+      font-family: var(--font-body);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+    .niche-tab.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+    .niche-panel { display: none; padding: 60px 0; }
+    .niche-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .niche-content h3 {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 400;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    .niche-content p {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+    .niche-bullets { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .niche-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 15px;
+      color: var(--muted);
+    }
+    .niche-bullets li::before {
+      content: '—';
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .niche-visual {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 40px;
+      font-size: 14px;
+    }
+    .chat-bubble {
+      padding: 14px 20px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .chat-bubble.barri {
+      background: rgba(201,169,110,0.1);
+      border-left: 2px solid var(--gold);
+      color: var(--white);
+    }
+    .chat-bubble.client {
+      background: rgba(255,255,255,0.04);
+      border-left: 2px solid var(--border);
+      color: var(--muted);
+    }
+    .chat-label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .chat-label.b { color: var(--gold); }
+    .chat-label.c { color: var(--muted); }
+ 
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 70px;
+    }
+    .feature {
+      padding: 44px 36px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+    .feature:hover { background: #1c1c1c; }
+    .feature-icon {
+      font-size: 24px;
+      margin-bottom: 20px;
+      display: block;
+    }
+    .feature h4 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+    .feature p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+ 
+    /* ── PRICING ── */
+    .pricing { background: var(--deep); }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      margin-top: 70px;
+      max-width: 800px;
+    }
+    .price-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 52px 44px;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+    .price-card.featured {
+      border-color: rgba(201,169,110,0.35);
+      background: #141210;
+    }
+    .price-badge {
+      position: absolute;
+      top: -1px; right: 32px;
+      background: var(--gold);
+      color: var(--black);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+    }
+    .price-niche {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .price-card h3 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+    .price-amount {
+      font-family: var(--font-display);
+      font-size: 52px;
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .price-amount span { font-size: 22px; }
+    .price-period { color: var(--muted); font-size: 13px; margin-bottom: 36px; }
+    .price-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+    .price-features li {
+      display: flex;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--muted);
+      align-items: flex-start;
+    }
+    .price-features li::before { content: '✓'; color: var(--gold); flex-shrink: 0; }
+ 
+    /* ── SOCIAL PROOF ── */
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 70px;
+    }
+    .proof-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 40px 36px;
+    }
+    .stars { color: var(--gold); font-size: 14px; margin-bottom: 20px; letter-spacing: 2px; }
+    .proof-quote {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.5;
+      margin-bottom: 28px;
+      font-style: italic;
+    }
+    .proof-author { font-size: 12px; color: var(--muted); letter-spacing: 0.06em; }
+    .proof-author strong { display: block; color: var(--white); font-weight: 400; margin-bottom: 2px; }
+ 
+    /* ── CTA SECTION ── */
+    .cta-section {
+      text-align: center;
+      padding: 140px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-glow {
+      position: absolute;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(201,169,110,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 { margin-bottom: 20px; }
+    .cta-section p {
+      font-size: 18px;
+      color: var(--muted);
+      margin-bottom: 48px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+ 
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 52px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--white);
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+    .footer-copy { color: var(--muted); font-size: 12px; }
+ 
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--card);
+      border: 1px solid rgba(201,169,110,0.25);
+      padding: 56px 52px;
+      max-width: 500px;
+      width: 90%;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal h3 {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 400;
+      margin-bottom: 10px;
+    }
+    .modal p { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
+    .modal-form { display: flex; flex-direction: column; gap: 16px; }
+    .modal-form input, .modal-form select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--white);
+      padding: 14px 18px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    .modal-form input::placeholder { color: var(--muted); }
+    .modal-form input:focus, .modal-form select:focus { border-color: rgba(201,169,110,0.5); }
+    .modal-form select option { background: var(--card); color: var(--white); }
+    .modal-close {
+      position: absolute;
+      top: 20px; right: 24px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 24px;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .modal { position: relative; }
+    .modal-success { display: none; text-align: center; padding: 20px 0; }
+    .modal-success .check {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    .modal-success h4 {
+      font-family: var(--font-display);
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+    .modal-success p { color: var(--muted); }
+ 
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+ 
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+      .problem-grid,
+      .how-grid,
+      .features-grid,
+      .pricing-grid,
+      .proof-grid { grid-template-columns: 1fr; }
+      .niche-panel.active { grid-template-columns: 1fr; gap: 40px; }
+      .how-grid .step { border-right: none; border-bottom: 1px solid var(--border); }
+      footer { flex-direction: column; text-align: center; padding: 40px 24px; }
+      section { padding: 80px 24px; }
+    }
+  </style>
+</head>
+<body>
+ 
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">barri<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#niches">Who It's For</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#" class="nav-cta" onclick="openModal(); return false;">Book a Demo</a></li>
+  </ul>
+</nav>
+ 
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-tag">For Law Firms &amp; Real Estate Agents</div>
+  <h1>Never Miss<br/><em>Another</em> Lead.</h1>
+  <p class="hero-sub">Barri answers when it would go to voicemail, calls back missed leads instantly, and only books qualified appointments — so you only speak to people worth your time.</p>
+  <div class="hero-buttons">
+    <a href="#" class="btn-primary" onclick="openModal(); return false;">Book a Free Demo</a>
+    <a href="#how" class="btn-secondary">See How It Works</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">62%</div>
+      <div class="stat-label">of calls go unanswered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">&lt;60s</div>
+      <div class="stat-label">Barri response time</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3×</div>
+      <div class="stat-label">more appointments booked</div>
+    </div>
+  </div>
+</section>
+ 
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="container">
+    <div class="section-label reveal">The Problem</div>
+    <h2 class="reveal">Every missed call is a<br/><em>client you never knew</em> you lost.</h2>
+    <p class="section-intro reveal">You're busy. You're in meetings, on-site, in court. Meanwhile, potential clients are calling — and when you don't pick up, they move on to the next name on the list.</p>
+    <div class="problem-grid">
+      <div class="problem-card reveal">
+        <div class="problem-num">01</div>
+        <h3>Calls Go Unanswered</h3>
+        <p>Most small firms and agents miss over half their inbound calls. Voicemail doesn't convert — people hang up and call someone else within minutes.</p>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-num">02</div>
+        <h3>Slow Follow-Up Kills Deals</h3>
+        <p>Studies show leads are 21× more likely to convert if contacted within 5 minutes. Most offices take hours — or days. That gap is where revenue disappears.</p>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-num">03</div>
+        <h3>Hiring Isn't the Answer</h3>
+        <p>A full-time receptionist costs $40,000+ per year and still can't work nights, weekends, or cover multiple lines at once. The maths don't add up.</p>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-num">04</div>
+        <h3>Your Competitors Are Moving Fast</h3>
+        <p>The firms and agents already using automated follow-up are capturing the leads you're missing. The window to get ahead is closing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="section-label reveal">How Barri Works</div>
+    <h2 class="reveal">Three steps.<br/><em>Zero effort</em> from you.</h2>
+    <div class="how-grid">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div class="step-icon">📞</div>
+        <h3>A Lead Calls or Enquires</h3>
+        <p>Someone calls your office, fills out a form, or sends a message — at any hour, any day of the week.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <div class="step-icon">⚡</div>
+        <h3>Barri Picks Up — or Calls Right Back</h3>
+        <p>If you're unavailable, Barri answers instead of sending them to voicemail. If the call is already missed, Barri calls back within 60 seconds — introducing itself as part of your team and having a natural conversation to understand their needs.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <div class="step-icon">📅</div>
+        <h3>Only Qualified Leads Get Booked.</h3>
+        <p>Barri qualifies every lead against your criteria before anything goes in the diary. If they meet your requirements, they're booked. If not, they're handled politely — so your calendar only has people worth your time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- NICHES -->
+<section class="niches" id="niches">
+  <div class="container">
+    <div class="section-label reveal">Who It's For</div>
+    <h2 class="reveal">Built for the industries<br/>where <em>every lead counts.</em></h2>
+    <div class="niche-tabs reveal">
+      <button class="niche-tab active" onclick="switchTab('law')">Law Firms</button>
+      <button class="niche-tab" onclick="switchTab('realestate')">Real Estate</button>
+    </div>
+    <div class="niche-panel active" id="tab-law">
+      <div class="niche-content">
+        <h3>Your next client shouldn't end up at a competitor because no one picked up.</h3>
+        <p>People looking for legal help are often in urgent situations. If you don't respond fast, they don't wait — they call the next firm. Barri makes sure that never happens.</p>
+        <ul class="niche-bullets">
+          <li>Answers calls that would normally go to voicemail — 24/7</li>
+          <li>Calls back missed leads within 60 seconds</li>
+          <li>Qualifies each lead before anything gets into your diary</li>
+          <li>Only books consultations with people who meet your criteria</li>
+          <li>Follows up via SMS and email if the call isn't answered</li>
+        </ul>
+      </div>
+      <div class="niche-visual">
+        <div class="chat-label b">Barri</div>
+        <div class="chat-bubble barri">Hi, this is Barri calling on behalf of the team at Harrison &amp; Associates. I noticed you reached out — are you looking for legal advice today?</div>
+        <div class="chat-label c">Potential Client</div>
+        <div class="chat-bubble client">Yes, I need help with a contract dispute — it's pretty urgent.</div>
+        <div class="chat-label b">Barri</div>
+        <div class="chat-bubble barri">Understood. I can get you booked in with one of our solicitors today. Would 2pm or 4pm work better for a 30-minute call?</div>
+        <div class="chat-label c">Potential Client</div>
+        <div class="chat-bubble client">2pm is perfect.</div>
+        <div class="chat-label b">Barri</div>
+        <div class="chat-bubble barri">Confirmed. You'll receive a text with the details. The team will be ready for you at 2pm. Is there anything else I can help with?</div>
+      </div>
+    </div>
+    <div class="niche-panel" id="tab-realestate">
+      <div class="niche-content">
+        <h3>When you're showing one property, Barri is handling everyone else.</h3>
+        <p>Hot buyers don't stay interested for long. Barri answers instantly, answers their questions, and books viewings — while you're already with another client.</p>
+        <ul class="niche-bullets">
+          <li>Answers calls that would go to voicemail — no lead left hanging</li>
+          <li>Calls back missed enquiries within 60 seconds</li>
+          <li>Qualifies buyers and sellers before booking a viewing</li>
+          <li>Only confirmed, serious leads get into your calendar</li>
+          <li>Follows up cold leads that went quiet via SMS and email</li>
+        </ul>
+      </div>
+      <div class="niche-visual">
+        <div class="chat-label b">Barri</div>
+        <div class="chat-bubble barri">Hi, this is Barri from Morrison Property. I saw you enquired about the 3-bed on Elm Street — happy to help. Is this a good moment?</div>
+        <div class="chat-label c">Potential Buyer</div>
+        <div class="chat-bubble client">Yes! I've been trying to get through all morning. Is it still available?</div>
+        <div class="chat-label b">Barri</div>
+        <div class="chat-bubble barri">Great news — it is. The current asking price is £385,000 and viewings are available this week. Would Saturday morning suit you?</div>
+        <div class="chat-label c">Potential Buyer</div>
+        <div class="chat-bubble client">Saturday at 10 would be ideal.</div>
+        <div class="chat-label b">Barri</div>
+        <div class="chat-bubble barri">Booked. You'll receive a confirmation text shortly. Looking forward to showing you around.</div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- FEATURES -->
+<section class="features">
+  <div class="container">
+    <div class="section-label reveal">What's Included</div>
+    <h2 class="reveal">Everything you need.<br/><em>Nothing</em> you don't.</h2>
+    <div class="features-grid">
+      <div class="feature reveal">
+        <span class="feature-icon">🔁</span>
+        <h4>Answers & Calls Back</h4>
+        <p>Barri answers calls that would normally hit voicemail — and if a call is already missed, calls back within 60 seconds. Day or night, weekday or weekend.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="feature-icon">💬</span>
+        <h4>SMS &amp; Email Follow-Up</h4>
+        <p>If the callback isn't answered, Barri follows up by text and email until the lead is reached or opts out.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="feature-icon">📅</span>
+        <h4>Qualified Bookings Only</h4>
+        <p>Barri qualifies leads before anything touches your calendar. Only those who meet your criteria get booked — no time-wasters, no tyre-kickers.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="feature-icon">🏷️</span>
+        <h4>Your Brand, Your Name</h4>
+        <p>Barri introduces itself as part of your team. Your clients will never know it runs in the background.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="feature-icon">📊</span>
+        <h4>Live Dashboard</h4>
+        <p>See every call, follow-up, and booking in real time. Full transparency on every lead Barri has touched.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="feature-icon">🔒</span>
+        <h4>Compliant &amp; Secure</h4>
+        <p>Built with professional standards in mind — GDPR-compliant, with clear opt-out on every message.</p>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- PROOF -->
+<section class="proof" style="background: var(--deep);">
+  <div class="container">
+    <div class="section-label reveal">Results</div>
+    <h2 class="reveal">What our clients<br/><em>are saying.</em></h2>
+    <div class="proof-grid">
+      <div class="proof-card reveal">
+        <div class="stars">★★★★★</div>
+        <div class="proof-quote">"We were losing leads every weekend. Barri changed that overnight. Our consultation bookings are up and we didn't hire anyone."</div>
+        <div class="proof-author">
+          <strong>Sarah M.</strong>
+          Partner, Family Law Firm
+        </div>
+      </div>
+      <div class="proof-card reveal">
+        <div class="stars">★★★★★</div>
+        <div class="proof-quote">"I'm showing a property and three other enquiries are being handled at the same time. That would never have happened before."</div>
+        <div class="proof-author">
+          <strong>James R.</strong>
+          Independent Estate Agent
+        </div>
+      </div>
+      <div class="proof-card reveal">
+        <div class="stars">★★★★★</div>
+        <div class="proof-quote">"Setup was painless and within the first week we'd recovered leads that would have absolutely gone cold. The ROI is obvious."</div>
+        <div class="proof-author">
+          <strong>David K.</strong>
+          Property Director
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-label reveal">Pricing</div>
+    <h2 class="reveal">Simple pricing.<br/><em>Clear value.</em></h2>
+    <p class="section-intro reveal">No setup fees. No long-term contracts. Cancel any time.</p>
+    <div class="pricing-grid">
+      <div class="price-card reveal">
+        <div class="price-niche">Law Firms</div>
+        <h3>Firm</h3>
+        <div class="price-amount"><span>£</span>397</div>
+        <div class="price-period">per month</div>
+        <ul class="price-features">
+          <li>Instant callback on missed calls</li>
+          <li>SMS &amp; email follow-up sequences</li>
+          <li>Calendar booking integration</li>
+          <li>Your firm's branding throughout</li>
+          <li>Live dashboard &amp; call recordings</li>
+          <li>Up to 200 leads per month</li>
+        </ul>
+        <a href="#" class="btn-primary" onclick="openModal(); return false;" style="display:block; text-align:center;">Get Started</a>
+      </div>
+      <div class="price-card featured reveal">
+        <div class="price-badge">Most Popular</div>
+        <div class="price-niche">Real Estate</div>
+        <h3>Agent</h3>
+        <div class="price-amount"><span>£</span>397</div>
+        <div class="price-period">per month</div>
+        <ul class="price-features">
+          <li>Instant callback on missed calls</li>
+          <li>SMS &amp; email follow-up sequences</li>
+          <li>Calendar &amp; Calendly integration</li>
+          <li>Property listing Q&amp;A capability</li>
+          <li>Live dashboard &amp; call recordings</li>
+          <li>Up to 300 leads per month</li>
+        </ul>
+        <a href="#" class="btn-primary" onclick="openModal(); return false;" style="display:block; text-align:center;">Get Started</a>
+      </div>
+    </div>
+    <p style="margin-top: 24px; color: var(--muted); font-size: 13px;">Need more volume or a custom setup? <a href="#" onclick="openModal(); return false;" style="color: var(--gold); text-decoration: none;">Talk to us.</a></p>
+  </div>
+</section>
+ 
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="container" style="position:relative; z-index:1;">
+    <div class="section-label reveal" style="justify-content:center; display:flex;">Get Started</div>
+    <h2 class="reveal">Your next client<br/>is calling <em>right now.</em></h2>
+    <p class="reveal">Book a free 20-minute demo and we'll show you exactly how Barri works for your business — no commitment, no pressure.</p>
+    <div class="reveal">
+      <a href="#" class="btn-primary" onclick="openModal(); return false;" style="font-size:15px; padding:18px 52px;">Book Your Free Demo</a>
+    </div>
+  </div>
+</section>
+ 
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">barri<span>.</span></div>
+  <ul class="footer-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#niches">Who It's For</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#" onclick="openModal(); return false;">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 Barri. All rights reserved.</div>
+</footer>
+ 
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="modal-form-content">
+      <h3>Book a Free Demo</h3>
+      <p>We'll show you Barri in action and answer every question. Takes 20 minutes.</p>
+      <div class="modal-form">
+        <input type="text" id="m-name" placeholder="Your name" required />
+        <input type="text" id="m-business" placeholder="Business name" required />
+        <input type="email" id="m-email" placeholder="Email address" required />
+        <input type="tel" id="m-phone" placeholder="Phone number" />
+        <select id="m-type">
+          <option value="" disabled selected>I am a...</option>
+          <option>Law firm / solicitor</option>
+          <option>Estate agent / property</option>
+          <option>Other</option>
+        </select>
+        <button class="btn-primary" id="submit-btn" onclick="submitDemo()" style="margin-top: 8px;">Request My Demo →</button>
+      </div>
+    </div>
+    <div class="modal-success" id="modal-success">
+      <div class="check">✓</div>
+      <h4>You're booked in.</h4>
+      <p>We'll be in touch within one business day to confirm your demo time.</p>
+    </div>
+  </div>
+</div>
+ 
+<script>
+  // NAV SCROLL
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+ 
+  // REVEAL ON SCROLL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 60);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+ 
+  // TABS
+  function switchTab(tab) {
+    document.querySelectorAll('.niche-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.niche-panel').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+  }
+ 
+  // MODAL
+  function openModal() {
+    document.getElementById('modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      document.getElementById('modal-form-content').style.display = 'block';
+      document.getElementById('modal-success').style.display = 'none';
+    }, 300);
+  }
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('modal')) closeModal();
+  }
+  async function submitDemo() {
+    const name = document.getElementById('m-name').value.trim();
+    const business = document.getElementById('m-business').value.trim();
+    const email = document.getElementById('m-email').value.trim();
+    const phone = document.getElementById('m-phone').value.trim();
+    const type = document.getElementById('m-type').value;
+ 
+    if (!name || !email) { alert('Please fill in your name and email.'); return; }
+ 
+    const btn = document.getElementById('submit-btn');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+ 
+    try {
+      const response = await fetch('https://formspree.io/f/mzdokjke', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ name, business, email, phone, type })
+      });
+ 
+      if (response.ok) {
+        document.getElementById('modal-form-content').style.display = 'none';
+        document.getElementById('modal-success').style.display = 'block';
+      } else {
+        alert('Something went wrong. Please try again.');
+        btn.textContent = 'Request My Demo →';
+        btn.disabled = false;
+      }
+    } catch(err) {
+      alert('Something went wrong. Please check your connection and try again.');
+      btn.textContent = 'Request My Demo →';
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
